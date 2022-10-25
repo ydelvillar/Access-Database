@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OleDb;//Agregamos esta libreria.
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Access_Database
 {
@@ -22,6 +23,7 @@ namespace Access_Database
         private void Form1_Load(object sender, EventArgs e)
         {
             LlenarGrid();
+            txtID.Enabled = false;
         }
         void LlenarGrid()
         {
@@ -40,7 +42,37 @@ namespace Access_Database
             cmd.ExecuteNonQuery();
             conn.Close();
             MessageBox.Show("Registro exitosamente guardado");
-            //LimpiarTexto();
+            limpiarTexto();
+            LlenarGrid();
+        }
+        void limpiarTexto()
+        {
+            txtID.Text = "";
+            txtNombre.Text = "";
+            txtEdad.Text = "";
+        }
+
+        private void btnBorrar_Click(object sender, EventArgs e)
+        {
+            //txtID.Enabled = true;
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand("delete from TablaPersona where Id=" + txtID.Text + " ", conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            MessageBox.Show("Registro eliminado.");
+            limpiarTexto();
+            LlenarGrid();
+            //txtID.Enabled = false;
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand("update TablaPersona set Nombre='" + txtNombre.Text + "', Edad=" + txtEdad.Text + " where Id=" + txtID.Text + " ", conn);
+            cmd.ExecuteNonQuery();
+            conn.Close ();
+            MessageBox.Show("Registro actualizado.");
+            limpiarTexto();
             LlenarGrid();
         }
     }
